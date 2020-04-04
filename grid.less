@@ -10,4 +10,17 @@
     padding-top: @row_padding;
     padding-bottom: @row_padding;
   }
+
+  .generate_columns(@index) when (@index > 0){
+    .col-@{index}{
+      @temp: 100% / @columns * @index;
+      width: calc(~'@{temp} - 5px');
+      margin-right: -@block_margin;
+      margin-left: @margin_left;
+      display: inline-block;
+    }
+    .generate_columns(@index - 1);
+  }
+
+  .generate_columns(@columns);
 }
