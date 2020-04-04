@@ -24,6 +24,11 @@
   @text_colors: white, white, white, white, black, white, black, white, blue;
   @names  : primary, secondary, success, danger, warning, info, light, dark, link;
   @styles : length(@colors);
+
+  @sizes_names: small, medium, large;
+  @sizes: 1, 1.5, 2;
+  @sizes_num: length(@sizes);
+
   .styles(@names, @colors, @text_colors, @index) when (@index > 0){
 
     @name: extract(@names, @index);
@@ -41,3 +46,17 @@
   }
 
   .styles(@names, @colors, @text_colors, @styles);
+
+  .sizes(@sizes_names, @sizes, @index) when (@index > 0){
+
+    @name: extract(@sizes_names, @index);
+    @size: extract(@sizes, @index);
+
+    .mybtn-@{name}{
+      font-size: 75% * @size;
+    }
+
+    .sizes(@sizes_names, @sizes, @index - 1);
+  }
+
+  .sizes(@sizes_names, @sizes, @sizes_num);
