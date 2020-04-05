@@ -23,4 +23,17 @@
   }
 
   .generate_columns(@columns);
+
+  @display_options: flex, inline, inline-block;
+  @display_options_num: length(@display_options);
+
+  .generate_display(@display_options, @index) when (@index > 0){
+    @name: extract(@display_options, @index);
+    .d-@{name}{
+      display: @name;
+    }
+    .generate_display(@display_options, @index - 1);
+  }
+
+  .generate_display(@display_options, @display_options_num);
 }
