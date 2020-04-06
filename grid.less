@@ -29,7 +29,7 @@
     .col@{suffix}{
       @media screen and (min-width: ~'@{min}') and (max-width: ~'@{max}'){
         @temp: 100% / @columns * @index;
-        width: calc(~'@{temp} - @{block_margin}');
+        width: calc(~'@{temp} - @{margin_left}');
       }
       margin-right: -@block_margin;
       margin-left: @margin_left;
