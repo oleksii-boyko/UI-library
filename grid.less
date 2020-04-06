@@ -11,18 +11,34 @@
     padding-bottom: @row_padding;
   }
 
-  .generate_columns(@index) when (@index > 0){
-    .col-@{index}{
-      @temp: 100% / @columns * @index;
-      width: calc(~'@{temp} - 5px');
+  @sizes: '', '-xs', '-sm', '-md', '-lg';
+  @min_resolution: '1px', '1px', '768px', '992px', '1200px';
+  @max_resolution: '3480px', '768px', '992px', '1200px', '3480px';
+  @sizes_num: length(@sizes);
+
+  .generate_sizes(@sizes, @min_resolution, @max_resolution, @index) when (@index > 0){
+    @size: extract(@sizes, @index);
+    @min: extract(@min_resolution, @index);
+    @max: extract(@max_resolution, @index);
+    .generate_columns(@size, @min, @max, @columns);
+    .generate_sizes(@sizes, @min_resolution, @max_resolution, @index - 1);
+  }
+
+  .generate_columns(@size, @min, @max, @index) when (@index > 0){
+    @suffix: ~'@{size}-@{index}';
+    .col@{suffix}{
+      @media screen and (min-width: ~'@{min}') and (max-width: ~'@{max}'){
+        @temp: 100% / @columns * @index;
+        width: calc(~'@{temp} - @{block_margin}');
+      }
       margin-right: -@block_margin;
       margin-left: @margin_left;
       display: inline-block;
     }
-    .generate_columns(@index - 1);
+    .generate_columns(@size, @min, @max, @index - 1);
   }
 
-  .generate_columns(@columns);
+  .generate_sizes(@sizes, @min_resolution, @max_resolution, @sizes_num);
 
   @display_options: flex, inline, inline-block;
   @display_options_num: length(@display_options);
