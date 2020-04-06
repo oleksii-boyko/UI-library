@@ -43,8 +43,19 @@
     .mybtn-@{name}{
       color: @text_color;
       background-color: @color;
+      &:visited when ('@{name}'="link"){
+        color: blueviolet;
+        text-decoration: underline;
+      }
       &:hover{
         box-shadow: 0 0 10px lighten(@color, 10%);
+      }
+      &:hover when ('@{name}'="link"){
+        text-decoration: underline;
+      }
+      &:active when ('@{name}'="link"){
+        color: blueviolet;
+        text-decoration: underline;
       }
     }
     .styles(@names, @colors, @text_colors, @index - 1)
