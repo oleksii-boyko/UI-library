@@ -12,34 +12,33 @@
     justify-content: space-between;
   }
 
-  @sizes: '', '-xs', '-sm', '-md', '-lg';
-  @min_resolution: '1px', '1px', '768px', '992px', '1200px';
-  @max_resolution: '3480px', '768px', '992px', '1200px', '3480px';
+  @sizes: '-xs', '-sm', '-md', '-lg', '';
+  @max_resolution: '768px', '992px', '1200px', '1600px', '1600px';
   @sizes_num: length(@sizes);
 
-  .generate_sizes(@sizes, @min_resolution, @max_resolution, @index) when (@index > 0){
+  .generate_sizes(@sizes, @max_resolution, @index) when (@index > 0){
     @size: extract(@sizes, @index);
-    @min: extract(@min_resolution, @index);
     @max: extract(@max_resolution, @index);
-    .generate_columns(@size, @min, @max, @columns);
-    .generate_sizes(@sizes, @min_resolution, @max_resolution, @index - 1);
+    .generate_columns(@size, @max, @columns);
+    .generate_sizes(@sizes, @max_resolution, @index - 1);
   }
 
-  .generate_columns(@size, @min, @max, @index) when (@index > 0){
+  .generate_columns(@size, @max, @index) when (@index > 0){
     @suffix: ~'@{size}-@{index}';
     .col@{suffix}{
-      @media screen and (min-width: ~'@{min}') and (max-width: ~'@{max}'){
+      @media screen and (max-width: ~'@{max}'){
         @temp: 100% / @columns * @index;
         width: calc(~'@{temp} - @{margin_left}');
       }
+      text-align: center;
       margin-right: -@block_margin;
       margin-left: @margin_left;
       display: inline-block;
     }
-    .generate_columns(@size, @min, @max, @index - 1);
+    .generate_columns(@size, @max, @index - 1);
   }
 
-  .generate_sizes(@sizes, @min_resolution, @max_resolution, @sizes_num);
+  .generate_sizes(@sizes, @max_resolution, @sizes_num);
 
   @display_options: flex, inline, inline-block;
   @display_options_num: length(@display_options);
