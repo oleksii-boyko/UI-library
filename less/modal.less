@@ -1,0 +1,30 @@
+@max_shift: 9;
+@sizes: xs, sm, md, lg, fs;
+
+.generateSizes(@sizes, @index) when (@index > 0){
+  @size: extract(@sizes, @index);
+  .@{size}{
+    width: @index * 20vw;
+  }
+  .generateSizes(@sizes, @index - 1);
+}
+
+.generateSizes(@sizes, length(@sizes));
+
+.generateTop(@index) when (@index > 0){
+  .t-@{index}{
+    top: @index * 10vh;
+  }
+  .generateTop(@index - 1);
+}
+
+.generateTop(@max_shift);
+
+.generateLeft(@index) when (@index > 0){
+  .l-@{index}{
+    left: @index * 10vw;
+  }
+  .generateLeft(@index - 1);
+}
+
+.generateLeft(@max_shift);
