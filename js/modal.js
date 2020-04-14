@@ -37,3 +37,27 @@ function addBackground(modal) {
     background.style.zIndex =  "-1";
     modal.insertBefore(background, modal.getElementsByClassName("modal-heading")[0]);
 }
+
+setButtons(hide);
+setButtons(show);
+
+function setButtons(fnc){
+    let buttons = document.getElementsByClassName(fnc.name);
+    for (let i = 0; i < buttons.length; i++){
+        let button = buttons[i];
+        button.onclick = function () {
+            fnc(document.getElementById(button.name));
+        }
+    }
+}
+
+function show(modal){
+    modal.style.display = "block";
+    modal.style.zIndex = (String)(modals_open + 1);
+    modals_open++;
+}
+
+function hide(modal) {
+    modal.style.display = "none";
+    modals_open--;
+}
