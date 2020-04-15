@@ -41,3 +41,13 @@ function createCarouselMain(images, carousel) {
     carousel.appendChild(main);
     return content;
 }
+
+let images = shiftImages();
+
+function shiftImages() {
+    let images = document.getElementsByClassName("carousel-image");
+    for (let i = 0; i < images.length; i++) {
+        images[i].style.left = images[i].getBoundingClientRect().width * i + 'px';
+    }
+    return images;
+}
