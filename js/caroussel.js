@@ -74,3 +74,21 @@ function moveTo(content, from, target) {
     currentSlide.classList.remove("current");
     target.classList.add("current");
 }
+
+function checkButtons() {
+    if (currentImageIndex >= images.length - 1){
+        nextButton.style.visibility = "hidden";
+        currentImageIndex = images.length - 1;
+    }
+    else {
+        nextButton.style.visibility = "visible";
+    }
+
+    if (currentImageIndex <= 0){
+        prevButton.style.visibility = "hidden";
+        currentImageIndex = 0;
+    }
+    else {
+        prevButton.style.visibility = "visible";
+    }
+}
