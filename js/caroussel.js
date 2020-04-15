@@ -45,6 +45,7 @@ function createCarouselMain(images, carousel) {
 }
 
 let images = shiftImages();
+checkButtons();
 
 function shiftImages() {
     let images = document.getElementsByClassName("carousel-image");
