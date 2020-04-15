@@ -10,12 +10,14 @@ function putCarousel(id, images) {
 
     prevButton = document.createElement("i");
     prevButton.className = "fas fa-chevron-left carousel-button left";
+    prevButton.addEventListener("click", function (){ previous(content)});
     carousel.appendChild(prevButton);
 
     let content = createCarouselMain(images, carousel);
 
     nextButton = document.createElement("i");
     nextButton.className = "fas fa-chevron-right carousel-button right";
+    nextButton.addEventListener("click", function (){ next(content)});
     carousel.appendChild(nextButton);
 }
 
@@ -50,4 +52,25 @@ function shiftImages() {
         images[i].style.left = images[i].getBoundingClientRect().width * i + 'px';
     }
     return images;
+}
+
+function next(content){
+    let currentSlide = content.querySelector(".current");
+    moveTo(content, currentSlide, currentSlide.nextElementSibling);
+    currentImageIndex++;
+    checkButtons();
+}
+
+function previous(content) {
+    let currentSlide = content.querySelector(".current");
+    moveTo(content, currentSlide, currentSlide.previousElementSibling);
+    currentImageIndex--;
+    checkButtons();
+}
+
+function moveTo(content, from, target) {
+    let currentSlide = content.querySelector(".current");
+    content.style.transform = 'translateX(-' + target.style.left + ')';
+    currentSlide.classList.remove("current");
+    target.classList.add("current");
 }
