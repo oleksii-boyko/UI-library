@@ -1,0 +1,44 @@
+body{
+    margin: 0;
+}
+
+.modal{
+    top: 20vh;
+    left: 20vw;
+    background-color: white;
+    box-shadow: 0 0 3px black;
+    width: 60vw;
+    position: fixed;
+}
+
+.modal button:hover{
+    cursor: pointer;
+}
+
+.modal > .modal-heading{
+    color: white;
+    background-color: rgba(0, 0, 255, 0.4);
+    font-weight: bold;
+}
+
+.modal > .modal-main{
+    background-color: white;
+}
+
+.modal > .modal-footer{
+    background-color: white;
+}
+
+.cross{
+    padding: 0;
+    border: 2px solid;
+    font-weight: bold;
+    float: right;
+    background: rgba(0, 0, 0, 0);
+    border-radius: 20%;
+    color: white;
+}
+
+.p1{
+    padding: 1vh 1vw;
+}

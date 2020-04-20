@@ -1,0 +1,41 @@
+.carousel{
+    position: relative;
+    width: 30vw;
+    height: 30vh;
+    margin: 0 auto;
+}
+
+.carousel-main{
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+}
+
+.carousel-content{
+    position: relative;
+    height: 100%;
+    transition: transform 250ms ease-in;
+}
+
+.carousel-image{
+    width: 100%;
+    list-style: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.carousel-button{
+    position: absolute;
+    top: 50%;
+    font-size: xx-large;
+    cursor: pointer;
+}
+
+.left{
+    left: -2vw;
+}
+
+.right{
+    right: -2vw;
+}
