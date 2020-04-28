@@ -23,6 +23,27 @@ DataTable(tableConfig, users);
 function DataTable(config, data) {
     let parent = document.getElementById(config.parent);
 
+    if (config["search"]){
+        parent.appendChild(createSearchBar());
+    }
+
+    function createSearchBar() {
+        let bar = document.createElement("div");
+        bar.classList.add("table-search");
+        let input = document.createElement("input");
+        input["type"] = "text";
+        input.addEventListener("input", function () {
+            let fields;
+            fields = (config["search"])["fields"] ? (config["search"])["fields"] : (config["columns"]).map(x => x["value"]);
+
+            let body = (table.getElementsByTagName("tbody")[0]);
+            table.removeChild(body);
+            table.appendChild(createBody(config, (input.value) ? filterArray(data, fields, input.value) : data));
+        });
+        bar.appendChild(input);
+        return bar;
+    }
+
     const table = document.createElement("table");
     table.appendChild(createHead());
     table.appendChild(createBody(config, data));
