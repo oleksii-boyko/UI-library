@@ -1,0 +1,30 @@
+.align-right{
+    text-align: right;
+}
+
+table{
+    width: 80vw;
+    margin: 0 auto;
+}
+
+thead{
+    color: white;
+    background-color: blue;
+}
+
+tbody{
+    background-color: aliceblue;
+}
+
+thead>tr>th{
+    box-shadow: 0 0 3px black;
+}
+
+tbody>tr>td{
+    text-align: center;
+    box-shadow: 0 0 2px black;
+}
+
+.table-search{
+    margin: 1vh 10%;
+}
