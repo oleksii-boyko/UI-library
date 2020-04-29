@@ -8,6 +8,9 @@ const tableConfig = {
     ],
     search: {
         fields: ['name', 'surname'],
+        filters: [
+            v => v.toLowerCase()
+        ]
     }
 };
 
@@ -38,7 +41,7 @@ function DataTable(config, data) {
 
             let body = (table.getElementsByTagName("tbody")[0]);
             table.removeChild(body);
-            table.appendChild(createBody(config, (input.value) ? filterArray(data, fields, input.value) : data));
+            table.appendChild(createBody(config, (input.value) ? filterArray(data, fields, input.value, config.search.filters) : data));
         });
         bar.appendChild(input);
         return bar;
@@ -148,17 +151,28 @@ function DataTable(config, data) {
         return (Array.from(array)).sort(function(a, b){return isNaN(Number(a[property])) ? calculateIntSine(multiplier) * (a[property].localeCompare(b[property])) : calculateIntSine(multiplier) * (a[property] - b[property])});
     }
 
-    function filterArray(array, fields, value) {
+    function filterArray(array, fields, value, filters) {
 
         function compare(data){
             for (let i = 0; i < fields.length; i++){
-                if (data[fields[i]] == value){
+                if (applyFilters(data[fields[i]], filters) == applyFilters(value, filters)){
                     return true;
                 }
             }
             return false;
         }
         return array.filter(compare);
+
+        function applyFilters(value, filters) {
+            if (filters){
+                filters.forEach(applyFilter);
+
+                function applyFilter(filter) {
+                    value = filter(value);
+                }
+            }
+            return value;
+        }
     }
 }
 
