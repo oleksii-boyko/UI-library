@@ -148,7 +148,7 @@ function DataTable(config, data) {
     }
 
     function sortArray(array, property, multiplier) {
-        return (Array.from(array)).sort(function(a, b){return isNaN(Number(a[property])) ? calculateIntSine(multiplier) * (a[property].localeCompare(b[property])) : calculateIntSine(multiplier) * (a[property] - b[property])});
+        return (Array.from(array)).sort(function(a, b){return calculateIntSine(multiplier) * isNaN(Number(a[property])) ? (a[property].localeCompare(b[property])) : (a[property] - b[property])});
     }
 
     function filterArray(array, fields, value, filters) {
@@ -165,11 +165,7 @@ function DataTable(config, data) {
 
         function applyFilters(value, filters) {
             if (filters){
-                filters.forEach(applyFilter);
-
-                function applyFilter(filter) {
-                    value = filter(value);
-                }
+                filters.forEach(filter => value = filter(value));
             }
             return value;
         }
