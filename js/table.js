@@ -5,13 +5,23 @@ const tableConfig = {
         {title: 'Имя', value: 'name'},
         {title: 'Фамилия', value: 'surname', sortable: true},
         {title: 'Возраст', value: 'age', type: 'number', sortable: true}
+        {title: '№', value: 'index', editable: false},
+        {title: 'Тема', value: 'subject', sortable: true},
+        {title: 'Тело', value: 'body'},
+        {title: 'Почта', value: 'senderEmail', sortable: true, type: 'email'},
+        {title: 'Аватар', value: 'senderAvatar', type: 'url'},
+        //{title: 'Возраст', value: (user) => calculateTime(user['receivedAt']), type: 'number', sortable: true},
+        {title: 'Получено', value: 'receivedAt', type: 'datetime-local'}
     ],
     search: {
         fields: ['name', 'surname'],
+        fields: ['subject', 'senderEmail'],
         filters: [
             v => v.toLowerCase()
         ]
     }
+    },
+    apiURL: "https://5e938231c7393c0016de48e6.mockapi.io/api/ps5/emails"
 };
 
 const users = [
