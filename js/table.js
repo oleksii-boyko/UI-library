@@ -109,6 +109,14 @@ async function DataTable(config, data) {
                     = toDatetime(colElement["type"], rowContent[colElement.value]);
             }
 
+            const btnGroup = createElement("td", row, "", "btn-group");
+
+            const deleteBtn = createElement("button", btnGroup, "DELETE", "mybtn-danger");
+            deleteBtn.addEventListener('click', async function () {
+                await fetch(config.apiURL + "/" + rowContent["id"], { method: 'DELETE'});
+                updateBody(currentState = data = await getData());
+            });
+
             const editBtn = createElement("button", btnGroup, "EDIT", "mybtn-warning show");
             editBtn.name = rowContent["id"];
             createModal(btnGroup, editBtn, true, "PUT", rowContent);
