@@ -109,7 +109,71 @@ async function DataTable(config, data) {
                     = toDatetime(colElement["type"], rowContent[colElement.value]);
             }
 
+            const editBtn = createElement("button", btnGroup, "EDIT", "mybtn-warning show");
+            editBtn.name = rowContent["id"];
+            createModal(btnGroup, editBtn, true, "PUT", rowContent);
             index++;
+        }
+    }
+
+    function createModal(parent, trigger, filled, type, row = {}) {
+        let modal = createElement("div", parent, "", "modal md t-1 l-1");
+        modal["id"] = trigger["name"];
+
+        trigger.addEventListener('click', function () {
+            show(modal);
+        });
+
+        let modalHeading = createElement("div", modal,  "Enter new values", "modal-heading p1");
+        let modalBody = createElement("form", modal, "", "modal-main modal-form");
+
+        addInputs(modalBody, filled, row);
+
+        let modalFooter = createElement("div", modal, "", "modal-footer p1");
+
+        initializeModal(modal);
+
+        let saveBtn = createElement("button", modalFooter, "SAVE", "mybtn-info hide");
+        saveBtn.name = modal["id"];
+        saveBtn.type = "submit";
+        saveBtn.addEventListener('click', async function () {
+            hide(modal);
+            for (let i = 0; i < config.columns.length; i++){
+                if (config.columns[i].editable === false){
+                    continue;
+                }
+                row[config.columns[i].value] =
+                    document.getElementById(modal["id"] + config.columns[i].title).value;
+            }
+            await fetch(type === "PUT" ? config.apiURL + "/" + row["id"] : config.apiURL,
+                { method: type, body: JSON.stringify(row), headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }});
+            updateBody(currentState = data = await getData());
+        });
+
+        function addInputs(parent, filled, row) {
+            for (let i = 0; i < config.columns.length; i++){
+                if (config.columns[i].editable === false){
+                    continue;
+                }
+                let label = createElement("label", parent, (config.columns[i])["title"] + ":");
+
+                let input = createElement("input", parent);
+                input["id"] = modal["id"] + config.columns[i].title;
+                input.required = true;
+
+                if ((config.columns[i])["type"]){
+                    input["type"] = (config.columns[i])["type"];
+                }
+
+                if (filled) {
+                    input.defaultValue = row[(config.columns[i]).value];
+                    input.defaultValue = toDatetime(input["type"], input.defaultValue);
+                }
+
+                label["for"] = input["id"];
+            }
         }
     }
 

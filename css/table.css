@@ -28,3 +28,8 @@ tbody>tr>td{
 .table-search{
     margin: 1vh 10%;
 }
+
+.modal-form{
+    display: flex;
+    flex-direction: column;
+}
