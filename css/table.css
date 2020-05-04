@@ -29,7 +29,7 @@ tbody>tr>td{
     margin: 1vh 10%;
 }
 
-.modal-form{
-    display: flex;
-    flex-direction: column;
+.table-search input{
+    width: 100%;
+    background-color: azure;
 }

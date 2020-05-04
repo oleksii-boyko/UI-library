@@ -56,7 +56,8 @@ async function DataTable(config, data) {
         });
     }
 
-    let addBtn = createElement("button", parent, "ADD", "add");
+    let topBar = createElement("div", parent, "", "btn-group");
+    let addBtn = createElement("button", topBar, "ADD", "mybtn-primary mybtn-large add");
     addBtn.name = "add";
     createModal(parent, addBtn, false, "POST");
 

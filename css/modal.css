@@ -42,3 +42,8 @@ body{
 .p1{
     padding: 1vh 1vw;
 }
+
+.modal-form{
+    display: flex;
+    flex-direction: column;
+}
