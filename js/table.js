@@ -56,6 +56,9 @@ async function DataTable(config, data) {
         });
     }
 
+    let addBtn = createElement("button", parent, "ADD", "add");
+    addBtn.name = "add";
+    createModal(parent, addBtn, false, "POST");
 
     const table = createElement("table", parent);
     createHead(table);
