@@ -28,138 +28,98 @@ const users = [
 DataTable(tableConfig, users);
 
 function DataTable(config, data) {
+    let currentState = Array.from(data);
     let parent = document.getElementById(config.parent);
 
     if (config["search"]){
-        parent.appendChild(createSearchBar());
+        createSearchBar(parent);
     }
 
-    function createSearchBar() {
-        let bar = document.createElement("div");
-        bar.classList.add("table-search");
-        let input = document.createElement("input");
+    function createSearchBar(parent) {
+        const bar = createElement("div", parent, "", "table-search");
+        const input = createElement("input", bar);
         input["type"] = "text";
         input.addEventListener("input", function () {
-            let fields;
-            fields = (config["search"])["fields"] ? (config["search"])["fields"] : (config["columns"]).map(x => x["value"]);
+            let fields = (config["search"])["fields"] ? (config["search"])["fields"] : (config["columns"]).map(x => x["value"]);
 
-            let body = (table.getElementsByTagName("tbody")[0]);
-            table.removeChild(body);
-            table.appendChild(createBody(config, (input.value) ? filterArray(data, fields, input.value, config.search.filters) : data));
+            currentState = Array.from(data);
+            updateBody((input.value) ? currentState = filterArray(currentState, fields, input.value, config.search.filters) : currentState);
+            discardOtherButtons(table.getElementsByClassName("sort-button"))
         });
-        bar.appendChild(input);
-        return bar;
     }
 
-    const table = document.createElement("table");
-    table.appendChild(createHead());
-    table.appendChild(createBody(config, data));
-    parent.appendChild(table);
 
-    function createHead() {
-        const head = document.createElement("thead");
-        const content = document.createElement("tr");
-        head.appendChild(content);
+    const table = createElement("table", parent);
+    createHead(table);
+    createBody(config, currentState);
+
+    function createHead(table) {
+        const head = createElement("thead", table);
+        const content = createElement("tr", head);
         config.columns.forEach(createColumn);
 
         function createColumn(colElement) {
-            const column = document.createElement("th");
-            column.innerHTML = colElement["title"];
+            const column = createElement("th", content, colElement["title"]);
 
             if (colElement["sortable"] === true){
-                let sortButton = document.createElement("button");
-                sortButton.classList.add("sort-button");
-                let icon = document.createElement("i");
-                icon.classList.add("fas");
-                icon.classList.add("fa-sort");
-                sortButton.appendChild(icon);
+                let sortButton = createElement("button", column, "", "sort-button");
+                let icon = createElement("i", sortButton, "", "fas fa-sort");
                 sortButton["state"] = 0;
 
                 sortButton.addEventListener("click", function () {
-                    let buttons = document.getElementsByClassName("sort-button");
-
-                    for (let i = 0; i < buttons.length; i++){
-                        discardButton(buttons[i]);
-                    }
-
-                    function discardButton(button){
-                        if (button !== sortButton){
-                            button["state"] = 0;
-                            setActualClass(button);
-                        }
-                    }
+                    discardOtherButtons(table.getElementsByClassName("sort-button"), sortButton);
 
                     sortButton["state"] += Math.PI / 2;
                     setActualClass(sortButton);
 
-                    let body = (table.getElementsByTagName("tbody")[0]);
-                    table.removeChild(body);
-                    table.appendChild(createBody(config, sortArray(data, colElement["value"], sortButton["state"])));
+                    updateBody( sortArray(currentState, colElement["value"], sortButton["state"]));
                 });
-
-                function setActualClass(button) {
-                    let buttonClasses = button.firstChild.classList;
-                    for (let i = 0; i < buttonClasses.length; i++) {
-                        if (buttonClasses[i].includes("fa-")) {
-                            buttonClasses.remove(buttonClasses[i]);
-                            buttonClasses.add(obtainActualClass(button["state"]));
-                            break;
-                        }
-                    }
-                }
-
-                function obtainActualClass(state) {
-                    if (calculateIntSine(state) === -1){
-                        return "fa-sort-down"
-                    }
-                    else if (calculateIntSine(state) === 0){
-                        return "fa-sort"
-                    }
-                    else if (calculateIntSine(state) === 1){
-                        return "fa-sort-up"
-                    }
-                }
-                column.appendChild(sortButton);
             }
-            content.appendChild(column);
         }
-        return head;
     }
 
     function createBody(config, data) {
-        const body = document.createElement("tbody");
+        const body = createElement("tbody", table);
         let index = 1;
         data.forEach(createRow);
 
         function createRow(rowContent) {
             rowContent["index"] = index;
-            const row = document.createElement("tr");
+            const row = createElement("tr", body);
             config.columns.forEach(createColumn);
-            body.appendChild(row);
 
             function createColumn(colElement) {
-                const col = document.createElement("td");
-                col.innerHTML = rowContent[colElement.value];
-                if (colElement.type === "number"){
+                const col = createElement("td", row,
+                    typeof colElement.value === "function"
+                    ? colElement.value(rowContent)
+                    : rowContent[colElement.value]);
+                if (colElement["type"] === "number"){
                     col.classList.add("align-right");
                 }
-                row.appendChild(col);
+
+                col.innerHTML = rowContent[colElement.value]
+                    = toDatetime(colElement["type"], rowContent[colElement.value]);
             }
 
             index++;
         }
-        return body;
     }
 
     function sortArray(array, property, multiplier) {
-        return (Array.from(array)).sort(function(a, b){return calculateIntSine(multiplier) * isNaN(Number(a[property])) ? (a[property].localeCompare(b[property])) : (a[property] - b[property])});
+        return (Array.from(array)).sort(
+            function(a, b){
+                const aValue = getValueFor(a, property);
+                const bValue = getValueFor(b, property);
+                return calculateIntSine(multiplier) * (isNaN(Number(aValue))
+            ? aValue.localeCompare(bValue)
+            : (aValue - bValue))});
     }
 
     function filterArray(array, fields, value, filters) {
 
         function compare(data){
             for (let i = 0; i < fields.length; i++){
-                if (applyFilters(data[fields[i]], filters) == applyFilters(value, filters)){
+                if (applyFilters(data[fields[i]], filters).includes(applyFilters(value, filters))){
                     return true;
                 }
             }
@@ -174,6 +134,13 @@ function DataTable(config, data) {
             return value;
         }
     }
+
+    function updateBody(newData) {
+        let body = (table.getElementsByTagName("tbody")[0]);
+        table.removeChild(body);
+        createBody(config, newData);
+    }
+}
 
 function toDatetime(type, value) {
     return (type === "datetime-local" && value.endsWith("Z"))
@@ -190,6 +157,42 @@ function createElement(type, parent, value = "", classes = "") {
 
 function getValueFor(obj, property) {
     return typeof property === 'function' ? property(obj) : obj[property]
+}
+
+function discardOtherButtons(buttons, refButton) {
+    for (let i = 0; i < buttons.length; i++) {
+        discardButton(buttons[i]);
+    }
+
+    function discardButton(button) {
+        if (button !== refButton) {
+            button["state"] = 0;
+            setActualClass(button);
+        }
+    }
+}
+
+function setActualClass(button) {
+    let buttonClasses = button.firstChild.classList;
+    for (let i = 0; i < buttonClasses.length; i++) {
+        if (buttonClasses[i].includes("fa-")) {
+            buttonClasses.remove(buttonClasses[i]);
+            buttonClasses.add(obtainActualClass(button["state"]));
+            break;
+        }
+    }
+}
+
+function obtainActualClass(state) {
+    if (calculateIntSine(state) === -1){
+        return "fa-sort-down"
+    }
+    else if (calculateIntSine(state) === 0){
+        return "fa-sort"
+    }
+    else if (calculateIntSine(state) === 1){
+        return "fa-sort-up"
+    }
 }
 
 function calculateAge(birthday) {
