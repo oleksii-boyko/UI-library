@@ -174,8 +174,46 @@ function DataTable(config, data) {
             return value;
         }
     }
+
+function toDatetime(type, value) {
+    return (type === "datetime-local" && value.endsWith("Z"))
+        ? value.substring(0, value.length - 1) : value;
+}
+
+function createElement(type, parent, value = "", classes = "") {
+    let element = document.createElement(type);
+    parent.appendChild(element);
+    element.innerHTML = value;
+    addClasses(element, classes);
+    return element;
+}
+
+function getValueFor(obj, property) {
+    return typeof property === 'function' ? property(obj) : obj[property]
+}
+
+function calculateAge(birthday) {
+    let currentDate = new Date();
+    let age = currentDate.getFullYear() - birthday.getFullYear();
+    return (currentDate.getMonth() > birthday.getMonth()
+        || (currentDate.getMonth() === birthday.getMonth()
+            && currentDate.getDay() >= birthday.getDay())) ? age : age - 1;
+}
+
+function calculateTime(refTime) {
+    let currentDate = new Date();
+    let ref = new Date(refTime);
+    const MINUTES_IN_HOUR = 60;
+    const SECONDS_IN_MINUTE = 60;
+    const MILLISECONDS_IN_SECOND = 1000;
+    return Math.round((currentDate.getTime() - ref.getTime()) / MINUTES_IN_HOUR / SECONDS_IN_MINUTE / MILLISECONDS_IN_SECOND);
 }
 
 function calculateIntSine(number) {
     return Math.round(Math.sin(number));
+}
+
+function addClasses(obj, classes) {
+    let classesArray = classes.split(" ");
+    classesArray.forEach(c => { if (c !== "") obj.classList.add(c) })
 }
