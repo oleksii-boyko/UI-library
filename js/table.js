@@ -25,9 +25,17 @@ const users = [
     {id: 32222, name: 'Серьезно?', surname: 'Вася?', age: 14}
 ];
 
-DataTable(tableConfig, users);
+DataTable(tableConfig);
 
-function DataTable(config, data) {
+async function DataTable(config, data) {
+    if (!data){
+        data = await getData();
+    }
+
+    async function getData() {
+        return await fetch(config.apiURL, {method : 'GET'}).then(response => response.json());
+    }
+
     let currentState = Array.from(data);
     let parent = document.getElementById(config.parent);
 
