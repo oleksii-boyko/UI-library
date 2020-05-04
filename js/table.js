@@ -87,6 +87,8 @@ async function DataTable(config, data) {
                 });
             }
         }
+
+        let actions = createElement("th", content, "Действия");
     }
 
     function createBody(config, data) {
