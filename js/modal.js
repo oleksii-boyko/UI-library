@@ -3,26 +3,25 @@ let modals = document.getElementsByClassName("modal");
 let modals_open = 0;
 
 for (let i = 0; i < modals.length; i++){
-    let modal = modals[i];
+    initializeModal(modals[i]);
+}
+
+function initializeModal(modal) {
     modal.style.display = "none";
     addCross(modal);
     addBackground(modal);
 }
 
 function addCross(modal){
-    let children = modal.childNodes;
-    for (let i = 0; i < children.length; i++){
-        if ((String)(children[i].className).includes("modal-heading")){
-            children[i].appendChild(createCrossButton(modal));
-        }
-    }
+    let heading = modal.querySelector(".modal-heading");
+    heading.appendChild(createCrossButton(modal));
 }
 
 function createCrossButton(modal) {
     let crossButton = document.createElement("button");
     crossButton.className = "cross";
     crossButton.innerText ="X";
-    crossButton.onclick = function (){hide(modal)};
+    crossButton.addEventListener('click', function (){ hide(modal) });
     return crossButton;
 }
 
@@ -35,7 +34,7 @@ function addBackground(modal) {
     background.style.width = "100vw";
     background.style.height = "100vh";
     background.style.zIndex =  "-1";
-    modal.insertBefore(background, modal.getElementsByClassName("modal-heading")[0]);
+    modal.insertBefore(background, modal.querySelector(".modal-heading"));
 }
 
 setButtons(hide);
@@ -44,10 +43,9 @@ setButtons(show);
 function setButtons(fnc){
     let buttons = document.getElementsByClassName(fnc.name);
     for (let i = 0; i < buttons.length; i++){
-        let button = buttons[i];
-        button.onclick = function () {
-            fnc(document.getElementById(button.name));
-        }
+        buttons[i].addEventListener('click', function () {
+            fnc(document.getElementById(buttons[i].name));
+        });
     }
 }
 
