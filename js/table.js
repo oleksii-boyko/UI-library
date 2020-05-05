@@ -30,15 +30,21 @@ const users = [
     {id: 32222, name: 'Серьезно?', surname: 'Вася?', age: 14}
 ];
 
-DataTable(tableConfig);
+const mails = [
+    {id: 0, subject: "Ho-ho", body: "Bd", senderEmail: "a@mail.ru", senderAvatar: "a.jpg", receivedAt: "2020-05-01T06:13:49.872"},
+    {id: 1, subject: "Ho-ho-ho", body: "Bdy", senderEmail: "b@gmail.com", senderAvatar: "b.jpg", receivedAt: "2020-04-01T06:13:49.872"},
+    {id: 2, subject: "Ho-ho-ho-ho", body: "Body", senderEmail: "c@ukr.net", senderAvatar: "c.jpg", receivedAt: "2020-03-01T06:13:49.872"}
+];
+
+DataTable(tableConfig, mails);
 
 async function DataTable(config, data) {
-    if (!data){
-        data = await getData();
-    }
+    const localData = !!data;
+
+    data = await getData();
 
     async function getData() {
-        return await fetch(config.apiURL, {method : 'GET'}).then(response => response.json());
+        return localData ? data : await fetch(config.apiURL, {method : 'GET'}).then(response => response.json());
     }
 
     let currentState = Array.from(data);
