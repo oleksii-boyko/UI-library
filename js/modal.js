@@ -23,21 +23,20 @@ setButtons(hide);
 setButtons(show);
 
 function setButtons(fnc){
-    let buttons = document.getElementsByClassName(fnc.name);
-    for (let i = 0; i < buttons.length; i++){
-        buttons[i].addEventListener('click', function () {
-            fnc(document.getElementById(buttons[i].name));
+    let buttons = document.querySelectorAll("." + fnc.name).forEach(b => {
+        b.addEventListener('click', function () {
+            fnc(document.getElementById(b.name));
         });
-    }
+    });
 }
 
-function show(modal){
+export function show(modal){
     modal.style.display = "block";
     modal.style.zIndex = (String)(modals_open + 1);
     modals_open++;
 }
 
-function hide(modal) {
+export function hide(modal) {
     modal.style.display = "none";
     modals_open--;
 }
