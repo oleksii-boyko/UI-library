@@ -1,11 +1,9 @@
 import {createElement} from "./support.js";
 
-let burgers = document.getElementsByClassName("burger");
+let burgers = document.querySelectorAll(".burger");
 let media = window.matchMedia("(min-width: 769px)");
 
-for (let i = 0; i < burgers.length; i++){
-    initializeBurger(burgers[i]);
-}
+burgers.forEach(b => { initializeBurger(b) });
 
 function initializeBurger(burger) {
     let icon = createElement("i", burger, "", "fas fa-align-justify");
