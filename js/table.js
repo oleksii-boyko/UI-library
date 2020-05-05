@@ -54,10 +54,10 @@ async function DataTable(config, data) {
         input["type"] = "text";
         input.addEventListener("input", function () {
             let fields = (config["search"])["fields"] ? (config["search"])["fields"] : (config["columns"]).map(x => x["value"]);
-
-            currentState = Array.from(data);
-            updateBody((input.value) ? currentState = filterArray(currentState, fields, input.value, config.search.filters) : currentState);
-            discardOtherButtons(table.getElementsByClassName("sort-button"))
+            updateBody(currentState = (input.value)
+                ? filterArray(data, fields, input.value, config.search.filters)
+                : Array.from(data));
+            discardOtherButtons(table.querySelectorAll(".sort-button"))
         });
     }
 
@@ -68,7 +68,7 @@ async function DataTable(config, data) {
 
     const table = createElement("table", parent);
     createHead(table);
-    createBody(config, currentState);
+    createBody(currentState);
 
     function createHead(table) {
         const head = createElement("thead", table);
@@ -84,12 +84,12 @@ async function DataTable(config, data) {
                 sortButton["state"] = 0;
 
                 sortButton.addEventListener("click", function () {
-                    discardOtherButtons(table.getElementsByClassName("sort-button"), sortButton);
+                    discardOtherButtons(table.querySelectorAll(".sort-button"), sortButton);
 
                     sortButton["state"] += Math.PI / 2;
                     setActualClass(sortButton);
 
-                    updateBody( sortArray(currentState, colElement["value"], sortButton["state"]));
+                    updateBody(sortArray(currentState, colElement["value"], sortButton["state"]));
                 });
             }
         }
@@ -97,10 +97,10 @@ async function DataTable(config, data) {
         let actions = createElement("th", content, "Действия");
     }
 
-    function createBody(config, data) {
+    function createBody(array) {
         const body = createElement("tbody", table);
         let index = 1;
-        data.forEach(createRow);
+        array.forEach(createRow);
 
         function createRow(rowContent) {
             rowContent["index"] = index;
@@ -125,7 +125,8 @@ async function DataTable(config, data) {
             const deleteBtn = createElement("button", btnGroup, "DELETE", "mybtn-danger");
             deleteBtn.addEventListener('click', async function () {
                 await fetch(config.apiURL + "/" + rowContent["id"], { method: 'DELETE'});
-                updateBody(currentState = data = await getData());
+                updateBody(currentState = Array.from(data = await getData()));
+                discardOtherButtons(table.querySelectorAll(".sort-button"))
             });
 
             const editBtn = createElement("button", btnGroup, "EDIT", "mybtn-warning show");
@@ -168,7 +169,8 @@ async function DataTable(config, data) {
                 { method: type, body: JSON.stringify(row), headers: {
                     "Content-type": "application/json; charset=UTF-8"
                 }});
-            updateBody(currentState = data = await getData());
+            updateBody(currentState = Array.from(data = await getData()));
+            discardOtherButtons(table.querySelectorAll(".sort-button"))
         });
 
         function addInputs(parent, filled, row) {
@@ -216,7 +218,6 @@ async function DataTable(config, data) {
             }
             return false;
         }
-        return array.filter(compare);
 
         function applyFilters(value, filters) {
             if (filters){
@@ -224,12 +225,14 @@ async function DataTable(config, data) {
             }
             return value;
         }
+
+        return array.filter(compare);
     }
 
     function updateBody(newData) {
         let body = (table.getElementsByTagName("tbody")[0]);
         table.removeChild(body);
-        createBody(config, newData);
+        createBody(newData);
     }
 }
 
@@ -243,9 +246,7 @@ function getValueFor(obj, property) {
 }
 
 function discardOtherButtons(buttons, refButton) {
-    for (let i = 0; i < buttons.length; i++) {
-        discardButton(buttons[i]);
-    }
+    buttons.forEach(b => { discardButton(b) });
 
     function discardButton(button) {
         if (button !== refButton) {
