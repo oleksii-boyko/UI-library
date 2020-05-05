@@ -1,51 +1,35 @@
+import {createElement} from "./support.js";
+
 let burgers = document.getElementsByClassName("burger");
 let media = window.matchMedia("(min-width: 769px)");
 
 for (let i = 0; i < burgers.length; i++){
-    let burger = burgers[i];
-    let sign = document.createElement("i");
-    sign.className = "fas fa-align-justify";
-    burger.onclick = function() {
-        changeState(burger);
-    };
-    burger.appendChild(sign);
-    adoptToSize(media, burger);
-    media.addEventListener("change", function (){ adoptToSize(media, burger) });
+    initializeBurger(burgers[i]);
 }
 
-function changeState(burger) {
-    if(burger.childNodes[0].className.includes("fas fa-align-justify")){
-        burger.childNodes[0].className = "fas fa-times";
-        nextSiblingWithClass(burger, "nav-menu").style.display = "flex";
-    }
-    else {
-        turnMobileInitialState(burger);
+function initializeBurger(burger) {
+    let icon = createElement("i", burger, "", "fas fa-align-justify");
+
+    burger.addEventListener('click', function () {
+        changeState(...(icon.className.includes("fas fa-align-justify") ? ["flex", true] : ["none", false]));
+    });
+    
+    changeState(media.matches ? "flex" : "none", false);
+
+    media.addEventListener("change", function () {
+        changeState(media.matches ? "flex" : "none", false);
+    });
+
+    function changeState(display, change) {
+        icon.className = change ? "fas fa-times":"fas fa-align-justify";
+        nextSiblingWithClass(burger, "nav-menu").style.display = display;
     }
 }
 
 function nextSiblingWithClass(element, className){
-    while (element.nextElementSibling !== null){
-        if (element.nextElementSibling.className.includes(className)){
-            return element.nextElementSibling;
+    for (let next = element.nextElementSibling; next !== null; next = next.nextElementSibling){
+        if (next.className.includes(className)){
+            return next;
         }
-    }
-}
-
-function turnMobileInitialState(burger) {
-    burger.childNodes[0].className = "fas fa-align-justify";
-    nextSiblingWithClass(burger, "nav-menu").style.display = "none";
-}
-
-function turnDesktopInitialState(burger) {
-    burger.childNodes[0].className = "fas fa-align-justify";
-    nextSiblingWithClass(burger, "nav-menu").style.display = "flex";
-}
-
-function adoptToSize(media, burger) {
-    if (media.matches){
-        turnDesktopInitialState(burger);
-    }
-    else {
-        turnMobileInitialState(burger);
     }
 }
