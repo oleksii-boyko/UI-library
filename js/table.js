@@ -1,5 +1,7 @@
 import {initializeModal} from "./modal.js";
 import {createElement} from "./support.js";
+import {hide} from "./modal.js";
+import {show} from "./modal.js";
 
 const tableConfig = {
     parent: 'usersTable',
