@@ -120,7 +120,8 @@ async function DataTable(config, data) {
                     = toDatetime(colElement["type"], rowContent[colElement.value]);
             }
 
-            const btnGroup = createElement("td", row, "", "btn-group");
+            const td = createElement("td", row, "");
+            const btnGroup = createElement("div", td, "", "btn-group");
 
             const deleteBtn = createElement("button", btnGroup, "DELETE", "mybtn-danger");
             deleteBtn.addEventListener('click', async function () {
