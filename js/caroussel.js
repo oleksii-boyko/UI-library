@@ -1,103 +1,83 @@
+import {createElement} from "./support.js";
+import {addClasses} from "./support.js";
+
 const config1 = ["https://loremflickr.com/320/240", "https://loremflickr.com/320/240/dog", "https://loremflickr.com/320/240/paris,girl/all"];
-const INITIAL_INDEX = 0;
 
 putCarousel("carousel", config1);
 
 function putCarousel(id, images) {
-    let currentImageIndex = INITIAL_INDEX;
+    let currentImageIndex = 0;
     let carousel = document.getElementById(id);
     let imagesNum = images.length;
 
-    let prevButton = document.createElement("i");
-    prevButton.className = "fas fa-chevron-left carousel-button left";
+    let prevButton = createElement("i", carousel, "", "fas fa-chevron-left carousel-button left");
     prevButton.addEventListener("click", function (){
-        previous(content);
+        moveTo(content, getCurrent(content), getCurrent(content).previousElementSibling);
         currentImageIndex--;
-        currentImageIndex = checkButtons(prevButton, nextButton, currentImageIndex, imagesNum);
+        currentImageIndex = checkButtons(currentImageIndex, imagesNum);
     });
-    carousel.appendChild(prevButton);
 
     let content = createCarouselMain(images, carousel);
 
-    let nextButton = document.createElement("i");
-    nextButton.className = "fas fa-chevron-right carousel-button right";
-    nextButton.addEventListener("click", function (){
-        next(content);
-        currentImageIndex++;
-        currentImageIndex = checkButtons(prevButton, nextButton, currentImageIndex, imagesNum);
-    });
-    carousel.appendChild(nextButton);
+    let nextButton = createElement("i", carousel, "", "fas fa-chevron-right carousel-button right");
 
-    checkButtons(prevButton, nextButton, currentImageIndex, imagesNum);
+    nextButton.addEventListener("click", function (){
+        moveTo(content, getCurrent(content), getCurrent(content).nextElementSibling);
+        currentImageIndex++;
+        currentImageIndex = checkButtons(currentImageIndex, imagesNum);
+    });
+
+    currentImageIndex = checkButtons(currentImageIndex, imagesNum);
     shiftImages();
+
+    function checkButtons(index) {
+        index = checkIndex(nextButton, imagesNum - 1);
+        index = checkIndex(prevButton, 0);
+
+        function checkIndex(button, value) {
+            button.style.visibility = index === value ? "hidden" : "visible";
+            return index === value ? value : index;
+        }
+
+        return index;
+    }
 }
 
 function createCarouselMain(images, carousel) {
-    let main = document.createElement("div");
-    main.className = "carousel-main";
-    carousel.appendChild(main);
+    let main = createElement("div", carousel, "", "carousel-main");
 
-    let content = document.createElement("ul");
-    content.className = "carousel-content";
-    main.appendChild(content);
+    let content = createElement("ul", main, "", "carousel-content");
     addImages(images, content);
 
-    let first = content.childNodes[INITIAL_INDEX];
-    first.classList.add("current");
+    let first = content.childNodes[0];
+    addClasses(first, "current");
+
+    function addImages(images) {
+        for (let i = 0; i < images.length; i++) {
+            let carousel_element = createElement("li", content, "", "carousel-image");
+            let image = createElement("img", carousel_element);
+            image.src = images[i];
+        }
+    }
 
     return content;
 }
 
-function addImages(images, content) {
-    for (let i = 0; i < images.length; i++) {
-        let carousel_element = document.createElement("li");
-        carousel_element.className = "carousel-image";
-        let image = document.createElement("img");
-        image.src = images[i];
-        carousel_element.appendChild(image);
-        content.appendChild(carousel_element);
-    }
-}
-
 function shiftImages() {
-    let images = document.getElementsByClassName("carousel-image");
+    const images = document.getElementsByClassName("carousel-image");
+    let shift = 0;
     for (let i = 0; i < images.length; i++) {
-        images[i].style.left = images[i].getBoundingClientRect().width * i + 'px';
+        images[i].style.left = shift + 'px';
+        shift += images[i].getBoundingClientRect().width;
     }
-}
-
-function next(content){
-    let currentSlide = content.querySelector(".current");
-    moveTo(content, currentSlide, currentSlide.nextElementSibling);
-}
-
-function previous(content) {
-    let currentSlide = content.querySelector(".current");
-    moveTo(content, currentSlide, currentSlide.previousElementSibling);
 }
 
 function moveTo(content, from, target) {
-    let currentSlide = content.querySelector(".current");
     content.style.transform = 'translateX(-' + target.style.left + ')';
-    currentSlide.classList.remove("current");
-    target.classList.add("current");
+    from.classList.remove("current");
+    addClasses(target, "current");
 }
 
-function checkButtons(prev, next, index, max) {
-    if (index >= max - 1){
-        next.style.visibility = "hidden";
-        index = max - 1;
-    }
-    else {
-        next.style.visibility = "visible";
-    }
-
-    if (index <= 0){
-        prev.style.visibility = "hidden";
-        index = 0;
-    }
-    else {
-        prev.style.visibility = "visible";
-    }
-    return index;
+function getCurrent(content) {
+    return content.querySelector(".current");
 }

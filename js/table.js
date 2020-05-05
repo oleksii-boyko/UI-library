@@ -1,3 +1,6 @@
+import {initializeModal} from "./modal.js";
+import {createElement} from "./support.js";
+
 const tableConfig = {
     parent: 'usersTable',
     columns: [
@@ -233,14 +236,6 @@ function toDatetime(type, value) {
         ? value.substring(0, value.length - 1) : value;
 }
 
-function createElement(type, parent, value = "", classes = "") {
-    let element = document.createElement(type);
-    parent.appendChild(element);
-    element.innerHTML = value;
-    addClasses(element, classes);
-    return element;
-}
-
 function getValueFor(obj, property) {
     return typeof property === 'function' ? property(obj) : obj[property]
 }
@@ -300,9 +295,4 @@ function calculateTime(refTime) {
 
 function calculateIntSine(number) {
     return Math.round(Math.sin(number));
-}
-
-function addClasses(obj, classes) {
-    let classesArray = classes.split(" ");
-    classesArray.forEach(c => { if (c !== "") obj.classList.add(c) })
 }

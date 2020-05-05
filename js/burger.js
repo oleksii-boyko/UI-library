@@ -13,7 +13,7 @@ function initializeBurger(burger) {
     burger.addEventListener('click', function () {
         changeState(...(icon.className.includes("fas fa-align-justify") ? ["flex", true] : ["none", false]));
     });
-    
+
     changeState(media.matches ? "flex" : "none", false);
 
     media.addEventListener("change", function () {
