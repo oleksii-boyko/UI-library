@@ -47,29 +47,29 @@ function createCarouselMain(images, carousel) {
     let main = createElement("div", carousel, "", "carousel-main");
 
     let content = createElement("ul", main, "", "carousel-content");
-    addImages(images, content);
+    addImages();
 
     let first = content.childNodes[0];
     addClasses(first, "current");
 
-    function addImages(images) {
-        for (let i = 0; i < images.length; i++) {
+    function addImages() {
+        images.forEach(i => {
             let carousel_element = createElement("li", content, "", "carousel-image");
             let image = createElement("img", carousel_element);
-            image.src = images[i];
-        }
+            image.src = i;
+        });
     }
 
     return content;
 }
 
 function shiftImages() {
-    const images = document.getElementsByClassName("carousel-image");
+    const images = document.querySelectorAll(".carousel-image");
     let shift = 0;
-    for (let i = 0; i < images.length; i++) {
-        images[i].style.left = shift + 'px';
-        shift += images[i].getBoundingClientRect().width;
-    }
+    images.forEach(i => {
+        i.style.left = shift + 'px';
+        shift += i.getBoundingClientRect().width;
+    });
 }
 
 function moveTo(content, from, target) {
