@@ -1,22 +1,24 @@
 import {createElement} from "./support.js";
 
-let modals = document.getElementsByClassName("modal");
+let modals = document.querySelectorAll(".modal");
 let modals_open = 0;
 
-for (let i = 0; i < modals.length; i++){
-    initializeModal(modals[i]);
-}
+modals.forEach(m => {
+    m.style.display = "none";
+    initializeModal(m, false);
+});
 
-export function initializeModal(modal) {
-    modal.style.display = "none";
-    addCross(modal);
+export function initializeModal(modal, removeFlag) {
+    addCross(modal, removeFlag);
     createElement("div", modal, "", "background");
 }
 
-function addCross(modal, parent) {
+function addCross(modal, removeFlag) {
     let crossButton = createElement("button",
         modal.querySelector(".modal-heading"), "X", "cross");
-    crossButton.addEventListener('click', function (){ hide(modal) });
+    crossButton.addEventListener('click', function (){
+        removeFlag ? remove(modal) : hide(modal);
+    });
 }
 
 setButtons(hide);
@@ -38,5 +40,10 @@ export function show(modal){
 
 export function hide(modal) {
     modal.style.display = "none";
+    modals_open--
+}
+
+export function remove(modal) {
+    modal.parentElement.removeChild(modal);
     modals_open--;
 }
