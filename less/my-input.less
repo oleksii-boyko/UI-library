@@ -1,0 +1,44 @@
+.my-form{
+  border: 2px solid black;
+  width: 40%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+
+  .i-group {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    padding: 5px;
+    width: 80%;
+
+    .error-message{
+      color: red;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    input,
+    .valid:focus {
+      box-shadow: 0 0 8px blue;
+      outline: none;
+    }
+
+    .invalid:focus {
+      box-shadow: 0 0 8px red;
+      outline: none;
+    }
+
+    .valid{
+      box-shadow: none;
+      border: 1px solid black;
+    }
+
+    .invalid{
+      border: 1px solid red;
+      box-shadow: 0 0 4px red;
+    }
+  }
+}
