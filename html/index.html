@@ -14,6 +14,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.5.1/less.min.js"></script>
     <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
     <script src="https://kit.fontawesome.com/079a7a16d8.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
 <body>
 <button class="show" name="m1">Let the fun begin</button>
@@ -55,6 +56,39 @@
 <br>
 <div class="carousel" id="carousel"></div>
 <div id="usersTable"></div>
+<div id="app" class="my-form">
+    <my-input
+            v-for="q in questions"
+            :key="q.title"
+            :type="q.type"
+            :title="q.title"
+            :placeholder="q.placeholder"
+            :required="q.required"
+            :id="increaseId()"
+    />
+</div>
+<script src="../js/my-input.js"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            questions: [
+                { title: "Как тебя зовут?", placeholder: "Иван", error: "Ты не Иван" },
+                { title: "Сколько тебе лет?", placeholder: "15", type: "number" },
+                { title: "Твой email", placeholder: "ivan@example.com", required: true,
+                    pattern: /^\w+@(\w+\.)+\w+$/, error: "Введите правильный email" }
+            ],
+            id : 0,
+        },
+        methods: {
+            increaseId: function () {
+                let old = this.id;
+                this.id++;
+                return "myin" + old;
+            }
+        }
+    })
+</script>
 <script type="module" src="../js/burger.js"></script>
 <script type="module" src="../js/caroussel.js"></script>
 <script type="module" src="../js/modal.js"></script>
