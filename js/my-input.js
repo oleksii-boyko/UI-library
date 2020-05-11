@@ -26,6 +26,15 @@ Vue.component('my-input', {
         value: {
             required: true
         },
+        pattern: {
+            default: () => /\w+|\W+/,
+            required: false
+        },
+        error: {
+            type: String,
+            default: "Incorrect field value",
+            required: false
+        }
         },
     methods: {
         validate: function () {
@@ -48,6 +57,7 @@ Vue.component('my-input', {
     <label :for=id>{{title}}<span v-if="required">*</span></label>
     <input v-model="value" :id=id :placeholder=placeholder :class="{ valid : cl, invalid : !cl }"
     :type=type :required=getRequired(required) v-on:input="setValid()" v-on:blur="validate()">
+    <span v-if="!cl" class="error-message">{{error}}</span>
 </div>
 `
 });
