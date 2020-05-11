@@ -23,6 +23,9 @@ Vue.component('my-input', {
             type: String,
             required: true
         },
+        value: {
+            required: true
+        },
         },
     methods: {
         validate: function () {
@@ -43,7 +46,7 @@ Vue.component('my-input', {
     template: `
 <div class="i-group">
     <label :for=id>{{title}}<span v-if="required">*</span></label>
-    <input :id=id :placeholder=placeholder :class="{ valid : cl, invalid : !cl }"
+    <input v-model="value" :id=id :placeholder=placeholder :class="{ valid : cl, invalid : !cl }"
     :type=type :required=getRequired(required) v-on:input="setValid()" v-on:blur="validate()">
 </div>
 `
