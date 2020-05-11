@@ -1,7 +1,6 @@
 import {initializeModal} from "./modal.js";
 import {createElement} from "./support.js";
-import {hide} from "./modal.js";
-import {show} from "./modal.js";
+import {remove} from "./modal.js";
 
 const tableConfig = {
     parent: 'usersTable',
@@ -70,7 +69,10 @@ async function DataTable(config, data) {
     let topBar = createElement("div", parent, "", "btn-group");
     let addBtn = createElement("button", topBar, "ADD", "mybtn-primary mybtn-large add");
     addBtn.name = "add";
-    createModal(parent, addBtn, false, "POST");
+
+    addBtn.addEventListener('click', function () {
+        createModal(parent, addBtn, false, "POST");
+    });
 
     const table = createElement("table", parent);
     createHead(table);
@@ -138,7 +140,11 @@ async function DataTable(config, data) {
 
             const editBtn = createElement("button", btnGroup, "EDIT", "mybtn-warning show");
             editBtn.name = rowContent["id"];
-            createModal(btnGroup, editBtn, true, "PUT", rowContent);
+
+            editBtn.addEventListener('click', function () {
+                createModal(btnGroup, editBtn, true, "PUT", rowContent);
+            });
+
             index++;
         }
     }
@@ -147,10 +153,6 @@ async function DataTable(config, data) {
         let modal = createElement("div", parent, "", "modal md t-1 l-1");
         modal["id"] = trigger["name"];
 
-        trigger.addEventListener('click', function () {
-            show(modal);
-        });
-
         let modalHeading = createElement("div", modal,  "Enter new values", "modal-heading p1");
         let modalBody = createElement("form", modal, "", "modal-main modal-form");
 
@@ -158,13 +160,12 @@ async function DataTable(config, data) {
 
         let modalFooter = createElement("div", modal, "", "modal-footer p1");
 
-        initializeModal(modal);
+        initializeModal(modal, true);
 
         let saveBtn = createElement("button", modalFooter, "SAVE", "mybtn-info hide");
         saveBtn.name = modal["id"];
         saveBtn.type = "submit";
         saveBtn.addEventListener('click', async function () {
-            hide(modal);
             for (let i = 0; i < config.columns.length; i++){
                 if (config.columns[i].editable === false){
                     continue;
@@ -176,6 +177,7 @@ async function DataTable(config, data) {
                 { method: type, body: JSON.stringify(row), headers: {
                     "Content-type": "application/json; charset=UTF-8"
                 }});
+            remove(modal);
             updateBody(currentState = Array.from(data = await getData()));
             discardOtherButtons(table.querySelectorAll(".sort-button"))
         });
