@@ -43,8 +43,9 @@ Vue.component('my-input', {
         getRequired: function (arg) {
             return arg ? "required" : "";
         },
-        setValid: function () {
+        setValid: function (val) {
             this["cl"] = true;
+            this.$emit('myinput', val);
         }
     },
     data() {
@@ -55,8 +56,8 @@ Vue.component('my-input', {
     template: `
 <div class="i-group">
     <label :for=id>{{title}}<span v-if="required">*</span></label>
-    <input v-model="value" :id=id :placeholder=placeholder :class="{ valid : cl, invalid : !cl }"
-    :type=type :required=getRequired(required) v-on:input="setValid()" v-on:blur="validate()">
+    <input :id=id :placeholder=placeholder :class="{ valid : cl, invalid : !cl }"
+    :type=type :required=getRequired(required) v-on:input="setValid($event.target.value)" v-on:blur="validate()">
     <span v-if="!cl" class="error-message">{{error}}</span>
 </div>
 `

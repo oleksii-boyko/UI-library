@@ -59,16 +59,18 @@
 <div id="usersTable"></div>
 <div id="app" class="my-form">
     <my-input
-            v-for="q in questions"
+            v-for="(q,index) in questions"
             :key="q.title"
             :type="q.type"
             :title="q.title"
             :placeholder="q.placeholder"
             :required="q.required"
-            :id="increaseId()"
+            :id="'indexInput-' + index"
             :value="value"
             :pattern="q.pattern"
             :error="q.error"
+            v-model="value"
+            @myinput="updateVal($event)"
     />
 </div>
 <script src="../js/my-input.js"></script>
@@ -82,17 +84,14 @@
                 { title: "Твой email", placeholder: "ivan@example.com", required: true,
                     pattern: /^\w+@(\w+\.)+\w+$/, error: "Введите правильный email" }
             ],
-            id : 0,
             value: ""
         },
         methods: {
-            increaseId: function () {
-                let old = this.id;
-                this.id++;
-                return "myin" + old;
+            updateVal: function (val) {
+                this.value = val;
             }
         }
-    })
+    });
 </script>
 <script type="module" src="../js/burger.js"></script>
 <script type="module" src="../js/caroussel.js"></script>
