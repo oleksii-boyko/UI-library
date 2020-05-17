@@ -15,8 +15,6 @@ Vue.component('my-input', {
             required: false
         },
         required: {
-            type: Boolean,
-            default: false,
             required: false
         },
         id: {
@@ -40,25 +38,32 @@ Vue.component('my-input', {
         validate: function () {
             this["cl"] = !(this["required"] && !this["value"].match(this["pattern"]));
         },
-        getRequired: function (arg) {
-            return arg ? "required" : "";
-        },
         setValid: function (val) {
             this["cl"] = true;
-            this.$emit('myinput', val);
+            this.$emit('input', val);
         }
     },
     data() {
         return {
-            cl : true
+            isValid : true
         };
     },
     template: `
 <div class="i-group">
-    <label :for=id>{{title}}<span v-if="required">*</span></label>
-    <input :id=id :placeholder=placeholder :class="{ valid : cl, invalid : !cl }"
-    :type=type :required=getRequired(required) v-on:input="setValid($event.target.value)" v-on:blur="validate()">
-    <span v-if="!cl" class="error-message">{{error}}</span>
+    <label 
+        :for=id>{{title}}
+        <span v-if="required">*</span>
+    </label>
+    <input 
+        :id="id" 
+        :placeholder="placeholder" 
+        :class="{ valid : isValid, invalid : !isValid }"
+        :type="type" 
+        :value="value"
+        :required="required" 
+        @input="setValid($event.target.value)" 
+        @blur="validate()">
+    <span v-if="!isValid" class="error-message">{{error}}</span>
 </div>
 `
 });

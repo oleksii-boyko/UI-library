@@ -69,8 +69,7 @@
             :value="value"
             :pattern="q.pattern"
             :error="q.error"
-            v-model="value"
-            @myinput="updateVal($event)"
+            v-model="values[q.name]"
     />
 </div>
 <script src="../js/my-input.js"></script>
@@ -79,12 +78,16 @@
         el: '#app',
         data: {
             questions: [
-                { title: "Как тебя зовут?", placeholder: "Иван", error: "Ты не Иван" },
-                { title: "Сколько тебе лет?", placeholder: "15", type: "number" },
-                { title: "Твой email", placeholder: "ivan@example.com", required: true,
+                { title: "Как тебя зовут?", placeholder: "Иван", error: "Ты не Иван", name: "name" },
+                { title: "Сколько тебе лет?", placeholder: "15", type: "number", name: "age" },
+                { title: "Твой email", placeholder: "ivan@example.com", required: true, name: "mail",
                     pattern: /^\w+@(\w+\.)+\w+$/, error: "Введите правильный email" }
             ],
-            value: ""
+            values: {
+                "name": "",
+                "age": "",
+                "mail": ""
+            }
         },
         methods: {
             updateVal: function (val) {
