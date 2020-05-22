@@ -66,7 +66,7 @@
             :placeholder="q.placeholder"
             :required="q.required"
             :id="'indexInput-' + index"
-            :value="value"
+            :value="values[q.name]"
             :pattern="q.pattern"
             :error="q.error"
             v-model="values[q.name]"

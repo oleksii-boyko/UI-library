@@ -25,7 +25,7 @@ Vue.component('my-input', {
             required: true
         },
         pattern: {
-            default: () => /\w+|\W+/,
+            default: () => /(\w+|\W+)+/,
             required: false
         },
         error: {
@@ -36,10 +36,10 @@ Vue.component('my-input', {
         },
     methods: {
         validate: function () {
-            this["cl"] = !(this["required"] && !this["value"].match(this["pattern"]));
+            this["isValid"] = !(this["required"] && !this["value"].match(this["pattern"]));
         },
         setValid: function (val) {
-            this["cl"] = true;
+            this["isValid"] = true;
             this.$emit('input', val);
         }
     },
