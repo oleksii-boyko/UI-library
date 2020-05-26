@@ -24,13 +24,21 @@
 import HelloWorld from '@/components/HelloWorld.vue'
 import MyButton from '@/components/MyButton.vue';
 import Modal from "@/components/Modal";
+import Carousel from "@/components/Carousel";
 
 export default {
   name: 'Home',
   components: {
+    Carousel,
     HelloWorld,
     MyButton
     Modal,
+  data() {
+    return {
+      config1 : ["https://loremflickr.com/320/240",
+        "https://loremflickr.com/320/240/dog",
+        "https://loremflickr.com/320/240/paris,girl/all"],
+  }
   },
   methods: {
     printClick: function () {
