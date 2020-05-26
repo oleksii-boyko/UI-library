@@ -16,6 +16,7 @@
         And I'm - modal footer
       </template>
     </Modal>
+    <Carousel :images="config1"></Carousel>
   </div>
 </template>
 
@@ -26,15 +27,23 @@ import MyButton from '@/components/MyButton.vue';
 import Row from "@/components/grid/Row";
 import Column from "@/components/grid/Column";
 import Modal from "@/components/Modal";
+import Carousel from "@/components/Carousel";
 
 export default {
   name: 'Home',
   components: {
+    Carousel,
     HelloWorld,
     MyButton,
     Row,
     Column,
     Modal,
+  data() {
+    return {
+      config1 : ["https://loremflickr.com/320/240",
+        "https://loremflickr.com/320/240/dog",
+        "https://loremflickr.com/320/240/paris,girl/all"],
+  }
   },
   methods: {
     printClick: function () {
