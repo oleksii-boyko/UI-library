@@ -16,6 +16,7 @@
         And I'm - modal footer
       </template>
     </Modal>
+    <Carousel :images="config1"></Carousel>
   </div>
 </template>
 
