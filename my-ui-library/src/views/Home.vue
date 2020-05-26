@@ -1,8 +1,11 @@
 <template>
   <div class="home">
-    <MyButton size="lg" variant="warning" @click="printClick">Some text</MyButton>
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <MyButton size="large" variant="warning" @click="printClick">Some text</MyButton>
+    <Row>
+      <Column class="red_square" lg="2">I'm 2</Column>
+      <Column class="red_square" lg="3">I'm 3</Column>
+      <Column class="red_square" lg="5">I'm 5</Column>
+    </Row>
   </div>
 </template>
 
