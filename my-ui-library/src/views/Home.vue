@@ -6,6 +6,16 @@
       <Column class="red_square" lg="3">I'm 3</Column>
       <Column class="red_square" lg="5">I'm 5</Column>
     </Row>
+    <Modal size="md" left="">
+      <template v-slot:trigger><button>Super Button</button></template>
+      <template v-slot:modal-heading>
+        Hi, I'm head
+      </template>
+      I'm Modal Body. Obey me!
+      <template v-slot:modal-footer>
+        And I'm - modal footer
+      </template>
+    </Modal>
   </div>
 </template>
 
@@ -15,6 +25,7 @@ import HelloWorld from '@/components/HelloWorld.vue'
 import MyButton from '@/components/MyButton.vue';
 import Row from "@/components/grid/Row";
 import Column from "@/components/grid/Column";
+import Modal from "@/components/Modal";
 
 export default {
   name: 'Home',
@@ -23,7 +34,7 @@ export default {
     MyButton,
     Row,
     Column,
-  },
+    Modal,
   },
   methods: {
     printClick: function () {

@@ -1,5 +1,5 @@
 <template>
-    <button :id="id" :class=classes @click="makeClick()">
+    <button :id="id" :class=classes @click="makeClick($event.target)">
         <slot></slot>
     </button>
 </template>
@@ -10,9 +10,9 @@
         props: {
             size: {
                 type: String,
-                default: "md",
+                default: "medium",
                 validator: function (size) {
-                    return ["sm", "md", "lg"].includes(size);
+                    return ["small", "medium", "large"].includes(size);
                 }
             },
             variant: {
@@ -28,8 +28,8 @@
             }
         },
         methods : {
-            makeClick() {
-                this.$emit('click');
+            makeClick(target) {
+                this.$emit('click', target);
             }
         },
         data() {
@@ -73,7 +73,7 @@
     @names: primary, secondary, success, danger, warning, info, light, dark, link;
     @styles: length(@colors);
 
-    @sizes_names: sm, md, lg;
+    @sizes_names: small, medium, large;
     @sizes: 1, 1.5, 2;
     @sizes_num: length(@sizes);
 
