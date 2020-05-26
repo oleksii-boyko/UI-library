@@ -13,17 +13,31 @@
 // @ is an alias to /src
 import HelloWorld from '@/components/HelloWorld.vue'
 import MyButton from '@/components/MyButton.vue';
+import Row from "@/components/grid/Row";
+import Column from "@/components/grid/Column";
 
 export default {
   name: 'Home',
   components: {
     HelloWorld,
-    MyButton
+    MyButton,
+    Row,
+    Column,
+  },
   },
   methods: {
     printClick: function () {
-      console.log("QQ");
+      console.log("Event works");
     }
   }
 }
 </script>
+
+<style>
+  .red_square{
+    background-color: red;
+    color: yellow;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+</style>
