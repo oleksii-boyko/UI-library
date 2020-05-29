@@ -24,9 +24,9 @@
         data(){
             return {
                 classes: this.lg ? "lg-" + this.lg : "" +
-                this.md ? "md-" + this.md : "" +
-                this.sm ? "sm-" + this.sm : "" +
-                this.xs ? "xs-" + this.xs : ""
+                this.md ? " md-" + this.md : "" +
+                this.sm ? " sm-" + this.sm : "" +
+                this.xs ? " xs-" + this.xs : ""
             }
         }
     }
