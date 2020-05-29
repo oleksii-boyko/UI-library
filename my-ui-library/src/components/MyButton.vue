@@ -22,9 +22,6 @@
                     return ["primary", "secondary", "success", "danger", "warning", "info",
                         "light", "dark", "link"].includes(variant);
                 }
-            },
-            id: {
-                type: String
             }
         },
         methods : {
