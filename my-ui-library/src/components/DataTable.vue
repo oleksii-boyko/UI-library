@@ -10,7 +10,10 @@
             <template v-slot:modal-heading>
                 Enter new values
             </template>
-            <div v-for="column in columns" v-if="column.editable!==false" class="modal-line">
+            <div v-for="column in columns"
+                 v-if="column.editable!==false"
+                 class="modal-line"
+                 :key="column.title">
                 <label :for="'add' + column.title">{{column.title + ":"}}</label>
                 <input :id="'add' + column.title"
                        :type="column.type" required
@@ -23,7 +26,8 @@
         <table>
             <thead>
             <tr>
-                <th v-for="column in columns">
+                <th v-for="column in columns"
+                    :key="column.title">
                     {{column.title}}
                     <button v-if="column.sortable===true"
                             @click="sort(column)">
@@ -38,7 +42,8 @@
 
             <tbody>
             <tr v-for="(row, index) in sorted">
-                <td v-for="column in columns">
+                <td v-for="column in columns"
+                    :key="column.title">
                     {{typeof column.value==="function" ?
                     column.value(row) :
                     column.value==="index" ?
@@ -53,7 +58,10 @@
                         <template v-slot:modal-heading>
                             Enter updated values
                         </template>
-                        <div v-for="column in columns" v-if="column.editable!==false" class="modal-line">
+                        <div v-for="column in columns"
+                             v-if="column.editable!==false"
+                             class="modal-line"
+                             :key="column.title">
                             <label :for="'put' + column.title + index">{{column.title + ":"}}</label>
                             <input :id="'put' + column.title + index"
                                    :type="column.type" required
