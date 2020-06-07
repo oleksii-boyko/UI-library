@@ -1,8 +1,8 @@
 <template>
     <div>
         <span @click="open"><slot name="trigger"></slot></span>
-        <div class="modal" :class="{visible: visibility, hidden: !visibility}">
-            <div class="background"></div>
+        <div class="modal" :style="{visibility : isVisible ? 'visible' : 'hidden'}">
+            <div class="background" @click="close"></div>
             <div class="modal-heading">
                 <slot name="modal-heading"></slot>
                 <button class="cross" @click="close">X</button>
@@ -28,23 +28,23 @@
         },
         methods: {
             close: function () {
-                this.visibility = false;
+                this.isVisible = false;
                 this.$emit('close');
             },
             open: function () {
-                this.visibility = true;
+                this.isVisible = true;
                 this.$emit('open')
             }
         },
         data(){
             return {
-                visibility: false
+                isVisible: false
             }
         }
     }
 </script>
 
-<style scoped lang="less">
+<style lang="less">
     .visible{
         visibility: visible;
     }

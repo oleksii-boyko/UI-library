@@ -1,5 +1,5 @@
 <template>
-    <button :id="id" :class=classes @click="makeClick($event.target)">
+    <button :class=classes @click="$emit('click', $event.target)">
         <slot></slot>
     </button>
 </template>
@@ -24,21 +24,16 @@
                 }
             }
         },
-        methods : {
-            makeClick(target) {
-                this.$emit('click', target);
+        computed: {
+            classes: function () {
+                return "my-button " + this.size + " " + this.variant;
             }
-        },
-        data() {
-            return {
-                classes: this.size + " " + this.variant
-        }
         }
     }
 </script>
 
-<style lang="less" scoped>
-    button {
+<style lang="less">
+    .my-button {
         color: black;
         background: whitesmoke;
         opacity: 0.85;
