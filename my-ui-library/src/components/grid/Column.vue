@@ -5,25 +5,32 @@
 </template>
 
 <script>
+    const colProp = {
+        type: String,
+        validator: function (num) {
+            return parseInt(num) <= 12 & parseInt(num) >= 0
+        }
+    };
+
     export default {
         name: "Column",
         props: {
             lg: {
-                type: String
+                colProp
             },
             md: {
-                type: String
+                colProp
             },
             sm: {
-                type: String
+                colProp
             },
             xs: {
-                type: String
+                colProp
             }
         },
-        data(){
-            return {
-                classes: this.lg ? "lg-" + this.lg : "" +
+        computed: {
+            classes: function () {
+                return this.lg ? "lg-" + this.lg : "" +
                 this.md ? " md-" + this.md : "" +
                 this.sm ? " sm-" + this.sm : "" +
                 this.xs ? " xs-" + this.xs : ""
@@ -32,7 +39,7 @@
     }
 </script>
 
-<style scoped lang="less">
+<style lang="less">
     @columns: 12;
     @margin_left: 5px;
     @block_margin: 4px;

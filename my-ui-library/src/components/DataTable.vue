@@ -114,22 +114,18 @@
                 sorted: Array.from(this.data),
                 states: {},
                 temp: {},
-                isLocal: this.data.length !== 0
+                isLocal: this.data.length !== 0,
+                classes: ["fas fa-sort-up", "fas fa-sort", "fas fa-sort-down"]
             }
         },
         async mounted() {
             await this.update();
             this.initializeButtons();
         },
-        computed: {
-            classes: function () {
-                return ["fas fa-sort-up", "fas fa-sort", "fas fa-sort-down"]
-            }
-        },
         methods: {
             initializeButtons: function (column) {
                 this.columns.forEach(c => {
-                    if (c !== column) this.states[c.title] = 1;
+                    if (c !== column) this.$set(this.states, c.title, 1);
                 });
             },
             sort: function (column) {
@@ -173,7 +169,7 @@
                     return value;
                 }
 
-                this.filtered = this.sorted = value ? this.natural.filter(compare) : Array.from(this.natural);
+                this.filtered = Array.from(this.sorted = value ? this.natural.filter(compare) : Array.from(this.natural));
             },
             getData: async function () {
                 return this.isLocal ?
@@ -203,7 +199,7 @@
                 alert("Row is successfully removed");
             },
             update: async function () {
-                this.filtered = this.sorted = this.natural = await this.getData();
+                this.filtered = Array.from(this.sorted = Array.from(this.natural = await this.getData()));
             },
             toDatetime: function(type, value) {
                 return (type === "datetime-local" && value.endsWith("Z"))
@@ -213,7 +209,7 @@
     }
 </script>
 
-<style scoped lang="less">
+<style lang="less">
     .align-right{
         text-align: right;
     }

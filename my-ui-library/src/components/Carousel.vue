@@ -6,7 +6,9 @@
         <div class="carousel-main">
             <ul class="carousel-content">
                 <li v-for="(image, i) in images"
-                    class="carousel-image" :class="{current : index===i}">
+                    class="carousel-image"
+                    :class="{current : index===i}"
+                    :key="image + i">
                     <img :src="image">
                 </li>
             </ul>
@@ -58,7 +60,7 @@
     }
 </script>
 
-<style scoped lang="less">
+<style lang="less">
     .carousel{
         position: relative;
         width: 30vw;

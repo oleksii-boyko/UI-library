@@ -10,7 +10,7 @@
     }
 </script>
 
-<style scoped lang="less">
+<style lang="less">
     .row{
         display: flex;
         flex-direction: row;
