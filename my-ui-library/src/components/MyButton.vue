@@ -22,11 +22,18 @@
                     return ["primary", "secondary", "success", "danger", "warning", "info",
                         "light", "dark", "link"].includes(variant);
                 }
+            },
+            shape: {
+                type: String,
+                default: "rounded",
+                validator: function (shape) {
+                    return ["round", "square", "rounded"].includes(shape);
+                }
             }
         },
         computed: {
             classes: function () {
-                return "my-button " + this.size + " " + this.variant;
+                return "my-button " + this.size + " " + this.variant + " " + this.shape;
             }
         }
     }
@@ -37,7 +44,6 @@
         color: black;
         background: whitesmoke;
         opacity: 0.85;
-        border-radius: 5px;
         padding: 0.5vh 1vw 1vh;
         text-align: center;
         vertical-align: middle;
@@ -68,6 +74,10 @@
     @sizes_names: small, medium, large;
     @sizes: 1, 1.5, 2;
     @sizes_num: length(@sizes);
+
+    @shapes: round, square, rounded;
+    @radiuses: 50%, 0px, 5px;
+    @shapes_num: length(@shapes);
 
     .styles(@names, @colors, @text_colors, @index) when (@index > 0) {
 
@@ -116,4 +126,17 @@
 
     .sizes(@sizes_names, @sizes, @sizes_num);
 
+    .shapes(@shapes, @radiuses, @index) when (@index > 0) {
+
+        @shape: extract(@shapes, @index);
+        @radius: extract(@radiuses, @index);
+
+        .@{shape} {
+            border-radius: @radius;
+        }
+
+        .shapes(@shapes, @radiuses, @index - 1);
+    }
+
+    .shapes(@shapes, @radiuses, @shapes_num);
 </style>
