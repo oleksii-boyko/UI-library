@@ -4,6 +4,11 @@
       <template #brand><i class="fab fa-suse"></i>Chameleon Inc</template>
       <template #menu>
         <router-link to="/">Home</router-link>
+        <router-link to="/button">Button</router-link>
+        <router-link to="/grid">Grid</router-link>
+        <router-link to="/modal">Modal</router-link>
+        <router-link to="/carousel">Carousel</router-link>
+        <router-link to="/table">Table</router-link>
       </template>
     </Navbar>
     <router-view/>
