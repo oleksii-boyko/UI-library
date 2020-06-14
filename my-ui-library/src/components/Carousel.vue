@@ -22,12 +22,12 @@
 <script>
     import '@fortawesome/fontawesome-free/css/all.css'
     import '@fortawesome/fontawesome-free/js/all.js'
-    // todo use :v-bind:transform
     export default {
         name: "Carousel",
         props: {
             images: {
-                Type: Array
+                Type: Array,
+                required: true
             }
         },
         methods: {

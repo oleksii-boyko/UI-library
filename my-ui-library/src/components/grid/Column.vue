@@ -30,10 +30,10 @@
         },
         computed: {
             classes: function () {
-                return this.lg ? "lg-" + this.lg : "" +
-                this.md ? " md-" + this.md : "" +
-                this.sm ? " sm-" + this.sm : "" +
-                this.xs ? " xs-" + this.xs : ""
+                return (this.lg ? "lg-" + this.lg : "") +
+                    (this.md ? " md-" + this.md : "") +
+                    (this.sm ? " sm-" + this.sm : "") +
+                    (this.xs ? " xs-" + this.xs : "")
             }
         }
     }
@@ -59,12 +59,13 @@
         .@{suffix}{
             @media screen and (max-width: ~'@{max}'){
                 @temp: 100% / @columns * @index;
-                width: calc(~'@{temp} - @{margin_left}');
+                width: calc(~'@{temp} - @{margin_left} + @{block_margin}');
             }
             text-align: center;
             margin-right: -@block_margin;
             margin-left: @margin_left;
             display: inline-block;
+            overflow: scroll;
         }
         .generate_columns(@size, @max, @index - 1);
     }

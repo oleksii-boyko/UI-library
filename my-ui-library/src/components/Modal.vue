@@ -1,7 +1,7 @@
 <template>
     <div>
         <span @click="open"><slot name="trigger"></slot></span>
-        <div class="modal" :style="{visibility : isVisible ? 'visible' : 'hidden'}">
+        <div class="modal" v-if="isVisible">
             <div class="background" @click="close"></div>
             <div class="modal-heading">
                 <slot name="modal-heading"></slot>
