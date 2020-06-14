@@ -1,9 +1,9 @@
 <template>
-    <div>
-        <div class="table-search">
+    <div style="overflow: scroll">
+        <div v-if="search" class="table-search">
             <input type="text" @input="filterArray($event.target.value)">
         </div>
-        <Modal id="add" size="md">
+        <Modal id="add" size="md" v-if="!static">
             <template v-slot:trigger>
                 <span class="btn-container"><MyButton variant="primary">ADD</MyButton></span>
             </template>
@@ -36,7 +36,7 @@
                         </span>
                     </button>
                 </th>
-                <th>Действия</th>
+                <th v-if="!static">Действия</th>
             </tr>
             </thead>
 
@@ -50,7 +50,7 @@
                     index :
                     toDatetime(column.type, row[column.value])}}
                 </td>
-                <td class="btn-group">
+                <td v-if="!static" class="btn-group">
                     <modal>
                         <template v-slot:trigger>
                             <span class="btn-container"><MyButton variant="warning">EDIT</MyButton></span>
@@ -94,7 +94,11 @@
             MyButton
         },
         props: {
-            data: {
+            name: {
+                type: String,
+                required: true
+            },
+            entries: {
                 default: () => ([])
             },
             columns: {
@@ -106,15 +110,19 @@
             apiurl: {
                 type: String
             },
+            static: {
+                type: Boolean,
+                default: false
+            }
         },
         data() {
             return {
-                natural: Array.from(this.data),
-                filtered: Array.from(this.data),
-                sorted: Array.from(this.data),
+                natural: Array.from(this.entries),
+                filtered: Array.from(this.entries),
+                sorted: Array.from(this.entries),
                 states: {},
                 temp: {},
-                isLocal: this.data.length !== 0,
+                isLocal: this.entries.length !== 0,
                 classes: ["fas fa-sort-up", "fas fa-sort", "fas fa-sort-down"]
             }
         },
@@ -151,11 +159,12 @@
             },
             filterArray: function (value) {
                 this.initializeButtons();
-                let fields = this.search.fields ? (this.search.fields) : (this.columns.map(x => x.fields));
+                let fields = this.search.fields ? this.search.fields : (this.columns.map(x => x.value));
                 let filters = this.search.filters;
                 function compare(data) {
                     for (let i = 0; i < fields.length; i++) {
-                        if (applyFilters(data[fields[i]], filters).includes(applyFilters(value, filters))) {
+                        if (!data[fields[i]]) continue;
+                        if (applyFilters(data[fields[i]].toString(), filters).includes(applyFilters(value, filters))) {
                             return true;
                         }
                     }
@@ -230,7 +239,7 @@
     }
 
     table{
-        width: 80vw;
+        width: 100%;
         margin: 0 auto;
 
         thead{
