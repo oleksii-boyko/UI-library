@@ -53,7 +53,7 @@
                 <td v-if="!static" class="btn-group">
                     <modal>
                         <template v-slot:trigger>
-                            <span class="btn-container"><MyButton variant="warning">EDIT</MyButton></span>
+                            <span class="btn-container" @click="temp=Object.assign({}, row)"><MyButton variant="warning">EDIT</MyButton></span>
                         </template>
                         <template v-slot:modal-heading>
                             Enter updated values
@@ -69,10 +69,10 @@
                                    :value="toDatetime(column.type, row[column.value])">
                         </div>
                         <template v-slot:modal-footer>
-                            <button @click="put(row)">SAVE</button>
+                            <button @click="put(row, index)">SAVE</button>
                         </template>
                     </modal>
-                    <MyButton variant="danger" @click="remove(row)">DELETE</MyButton>
+                    <MyButton variant="danger" @click="remove(row, index)">DELETE</MyButton>
                 </td>
             </tr>
             </tbody>
@@ -127,6 +127,10 @@
             }
         },
         async mounted() {
+            this.$store.commit("initTable", {
+                tableName: this.name,
+                initialState: this.entries
+            });
             await this.update();
             this.initializeButtons();
         },
@@ -137,6 +141,7 @@
                 });
             },
             sort: function (column) {
+                this.$emit('sort', column);
                 this.initializeButtons(column);
                 let property = column.value;
 
@@ -158,6 +163,7 @@
                     });
             },
             filterArray: function (value) {
+                this.$emit('input', value);
                 this.initializeButtons();
                 let fields = this.search.fields ? this.search.fields : (this.columns.map(x => x.value));
                 let filters = this.search.filters;
@@ -182,28 +188,34 @@
             },
             getData: async function () {
                 return this.isLocal ?
-                    this.natural :
+                    this.$store.state.tables[this.name] :
                     await fetch(this.apiurl, {method : 'GET'}).then(response => response.json())
             },
             saveTo: function (col, id) {
                 this.temp[col] = document.querySelector("#" + id).value;
             },
             post: async function () {
-                await fetch(this.apiurl, { method: "POST", body: JSON.stringify(this.temp),
+                this.isLocal ? this.$store.commit('post', { entry: this.temp, tableName: this.name })
+                    : await fetch(this.apiurl, { method: "POST", body: JSON.stringify(this.temp),
                     headers: { "Content-type": "application/json; charset=UTF-8"}});
+                this.$emit('post', this.temp);
                 this.temp = {};
                 await this.update();
                 alert("Data is successfully posted and updated")
             },
-            put: async function (row) {
-                await fetch(this.apiurl + "/" + row.id, { method: "PUT", body: JSON.stringify(this.temp),
+            put: async function (row, index) {
+                this.isLocal ? this.$store.commit('put', { entry: this.temp, tableName: this.name, index: index} )
+                    : await fetch(this.apiurl + "/" + row.id, { method: "PUT", body: JSON.stringify(this.temp),
                     headers: { "Content-type": "application/json; charset=UTF-8"}});
+                this.$emit('put', this.temp);
                 this.temp = {};
                 await this.update();
                 alert("Changes are successfully implemented");
             },
-            remove: async function (row) {
-                await fetch(this.apiurl + "/" + row.id, { method: "DELETE" });
+            remove: async function (row, index) {
+                this.isLocal ? this.$store.commit('remove', { tableName: this.name, index: index})
+                    : await fetch(this.apiurl + "/" + row.id, { method: "DELETE" });
+                this.$emit('remove', row);
                 await this.update();
                 alert("Row is successfully removed");
             },
