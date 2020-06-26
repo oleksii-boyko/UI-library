@@ -2,7 +2,7 @@
   <div class="content">
     <div class="logo"><i class="fab fa-suse"></i></div>
     <h1>Chameleon Inc - young developers team from Kropyvnytskyi presents you new library of commonly used Vue components</h1>
-    <h3 class="align-right">Better, stronger, chameleon</h3>
+    <h3 class="align-right">We don't exist, but chameleon does ;)</h3>
   </div>
 </template>
 

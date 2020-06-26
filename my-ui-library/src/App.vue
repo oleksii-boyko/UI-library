@@ -12,6 +12,27 @@
       </template>
     </Navbar>
     <router-view/>
+    <div class="footer">
+      <h3>For a <i class="fab fa-suse"></i> feedback contact us via:</h3>
+      <ul class="contacts">
+        <li>
+          <i class="fas fa-google"></i>
+          <span>  chameleon_rules@gmail.com</span>
+        </li>
+        <li>
+          <i class="fas fa-skype"></i>
+          <span>  believe_in_chameleon</span>
+        </li>
+        <li>
+          <i class="fa fa-telegram" aria-hidden="true"></i>
+          <span>  @Chameleon_team</span>
+        </li>
+        <li>
+          <i class="fas fa-github"></i>
+          <span>  github.com/chameleon_team</span>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -42,6 +63,31 @@
 
       &.router-link-exact-active {
         color: #42b983;
+      }
+    }
+  }
+
+  .footer{
+    background-color: blue;
+    color: white;
+    font-weight: bold;
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    text-align: center;
+
+    h3{
+      padding-top: 10px;
+      margin-bottom: 0;
+    }
+
+    .contacts{
+      text-align: left;
+      list-style: none;
+      padding: 10px 0;
+      margin: 0 auto;
+      width: 270px;
+
+      li{
+        padding: 5px 0;
       }
     }
   }
