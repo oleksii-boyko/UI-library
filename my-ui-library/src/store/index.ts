@@ -5,7 +5,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    tables: {}
+    tables : {} as {[tableName: string] : object[]}
   },
   mutations: {
     initTable (state, data : Table) {
@@ -13,8 +13,7 @@ export default new Vuex.Store({
       state.tables[data.tableName] = data.initialState;
     },
     remove (state, dataObj : CRUDContainer) {
-      // @ts-ignore
-      state.tables[dataObj.tableName].splice(dataObj.index, 1);
+      (state.tables)[dataObj.tableName].splice(dataObj.index, 1);
     },
     post (state, dataObj : CRUDContainer) {
       // @ts-ignore
@@ -33,11 +32,11 @@ export default new Vuex.Store({
 
 interface Table {
   tableName : string,
-  initialState : string
+  initialState : object[]
 }
 
 interface CRUDContainer {
   tableName : string,
   index : number,
-  entry: {}
+  entry: object
 }

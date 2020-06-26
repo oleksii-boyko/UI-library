@@ -80,13 +80,14 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
     import '@fortawesome/fontawesome-free/css/all.css'
     import '@fortawesome/fontawesome-free/js/all.js'
     import MyButton from '@/components/MyButton.vue';
-    import Modal from "@/components/Modal";
+    import Modal from "@/components/Modal.vue";
+    import Vue from "vue";
 
-    export default {
+    export default Vue.extend({
 
         name: "Table",
         components: {
@@ -102,9 +103,11 @@
                 default: () => ([])
             },
             columns: {
-                required: true
+                required: true,
+                type: Array
             },
             search: {
+                type: Object,
                 default: null
             },
             apiurl: {
@@ -117,11 +120,11 @@
         },
         data() {
             return {
-                natural: Array.from(this.entries),
-                filtered: Array.from(this.entries),
-                sorted: Array.from(this.entries),
-                states: {},
-                temp: {},
+                natural: Array.from(this.entries) as IEntry[],
+                filtered: Array.from(this.entries) as IEntry[],
+                sorted: Array.from(this.entries) as IEntry[],
+                states: {} as { [key: string] : number},
+                temp: {} as IEntry,
                 isLocal: this.entries.length !== 0,
                 classes: ["fas fa-sort-up", "fas fa-sort", "fas fa-sort-down"]
             }
@@ -135,39 +138,50 @@
             this.initializeButtons();
         },
         methods: {
-            initializeButtons: function (column) {
-                this.columns.forEach(c => {
+            initializeButtons: function (column?: IColumn): void {
+                (this.columns as IColumn[]).forEach((c: IColumn) => {
                     if (c !== column) this.$set(this.states, c.title, 1);
                 });
             },
-            sort: function (column) {
+            sort: function (column: IColumn): void {
                 this.$emit('sort', column);
                 this.initializeButtons(column);
-                let property = column.value;
+                let property: colValue = column.value;
 
-                function getValueFor (obj, property) {
+                function getValueFor (obj: IEntry, property: colValue): entryValue {
                     return typeof property === 'function' ? property(obj) : obj[property]
                 }
 
-                let state = this.states[column.title];
+                let state: number = this.states[column.title];
                 this.states[column.title] = (state + 1) % 3;
                 state = this.states[column.title];
 
+                function isNumber(n: entryValue): n is number {
+                    return !isNaN(Number(n))
+                }
                 this.sorted = (Array.from(this.filtered)).sort(
-                    function (a, b) {
-                        const aValue = getValueFor(a, property);
-                        const bValue = getValueFor(b, property);
-                        return (state - 1) * (isNaN(Number(aValue))
-                            ? aValue.localeCompare(bValue)
-                            : (aValue - bValue))
+                    function (a, b): number {
+                        const aValue: entryValue = getValueFor(a, property);
+                        const bValue: entryValue = getValueFor(b, property);
+                        let res = 0;
+                        if (isNumber(aValue) && isNumber(bValue)) {
+                            res = aValue - bValue;
+                        }
+                        else if (!isNumber(aValue) && !isNumber(bValue)) {
+                            res = aValue.localeCompare(bValue)
+                        }
+                        return (state - 1) * res;
                     });
             },
-            filterArray: function (value) {
+            filterArray: function (value: string): void {
                 this.$emit('input', value);
                 this.initializeButtons();
-                let fields = this.search.fields ? this.search.fields : (this.columns.map(x => x.value));
-                let filters = this.search.filters;
-                function compare(data) {
+                let fields: string[] = this.search.fields
+                    ? this.search.fields
+                    : ((this.columns as IColumn[]).map((x: IColumn) => x.value));
+                let filters: strFunction[] = this.search.filters;
+
+                function compare(data: IEntry): boolean {
                     for (let i = 0; i < fields.length; i++) {
                         if (!data[fields[i]]) continue;
                         if (applyFilters(data[fields[i]].toString(), filters).includes(applyFilters(value, filters))) {
@@ -177,7 +191,7 @@
                     return false;
                 }
 
-                function applyFilters(value, filters) {
+                function applyFilters(value: string, filters: strFunction[]): string {
                     if (filters) {
                         filters.forEach(filter => value = filter(value));
                     }
@@ -186,15 +200,16 @@
 
                 this.filtered = Array.from(this.sorted = value ? this.natural.filter(compare) : Array.from(this.natural));
             },
-            getData: async function () {
+            getData: async function (): Promise<IEntry[]> {
                 return this.isLocal ?
                     this.$store.state.tables[this.name] :
                     await fetch(this.apiurl, {method : 'GET'}).then(response => response.json())
             },
-            saveTo: function (col, id) {
-                this.temp[col] = document.querySelector("#" + id).value;
+            saveTo: function (col: string, id: string): void {
+                let input: HTMLFormElement | null = document.querySelector("#" + id);
+                this.temp[col] = input ? input.value : "";
             },
-            post: async function () {
+            post: async function (): Promise<void> {
                 this.isLocal ? this.$store.commit('post', { entry: this.temp, tableName: this.name })
                     : await fetch(this.apiurl, { method: "POST", body: JSON.stringify(this.temp),
                     headers: { "Content-type": "application/json; charset=UTF-8"}});
@@ -203,7 +218,7 @@
                 await this.update();
                 alert("Data is successfully posted and updated")
             },
-            put: async function (row, index) {
+            put: async function (row: IEntry, index: number): Promise<void> {
                 this.isLocal ? this.$store.commit('put', { entry: this.temp, tableName: this.name, index: index} )
                     : await fetch(this.apiurl + "/" + row.id, { method: "PUT", body: JSON.stringify(this.temp),
                     headers: { "Content-type": "application/json; charset=UTF-8"}});
@@ -212,22 +227,39 @@
                 await this.update();
                 alert("Changes are successfully implemented");
             },
-            remove: async function (row, index) {
+            remove: async function (row: IEntry, index: number): Promise<void> {
                 this.isLocal ? this.$store.commit('remove', { tableName: this.name, index: index})
                     : await fetch(this.apiurl + "/" + row.id, { method: "DELETE" });
                 this.$emit('remove', row);
                 await this.update();
                 alert("Row is successfully removed");
             },
-            update: async function () {
+            update: async function (): Promise<void> {
                 this.filtered = Array.from(this.sorted = Array.from(this.natural = await this.getData()));
             },
-            toDatetime: function(type, value) {
-                return (type === "datetime-local" && value.endsWith("Z"))
+            toDatetime: function(type: string, value: entryValue): entryValue {
+                return (type === "datetime-local" && typeof value === "string" && value.endsWith("Z"))
                     ? value.substring(0, value.length - 1) : value;
             }
         }
+    });
+
+    interface IColumn {
+        title: string,
+        value: colValue,
+        type: string,
+        editable?: boolean,
+        sortable?: boolean
     }
+
+    interface IEntry {
+        [key: string] : entryValue
+    }
+
+    type entryValue = string | number;
+    type entryFunction = ((e: IEntry) => entryValue);
+    type strFunction = (str: string) => string;
+    type colValue = string | entryFunction;
 </script>
 
 <style lang="less">
